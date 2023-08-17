@@ -4,6 +4,7 @@ import com.jiggycode.user.User;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Objects;
 
 @Entity
 @Table(
@@ -72,4 +73,107 @@ public class JournalEntry {
     private User user;
 
     // Constructors, getters, setters
+
+    public JournalEntry() {
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public LocalDate getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDate creationDate) {
+        this.creationDate = creationDate;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public double getNeutralSentimentScore() {
+        return neutralSentimentScore;
+    }
+
+    public void setNeutralSentimentScore(double neutralSentimentScore) {
+        this.neutralSentimentScore = neutralSentimentScore;
+    }
+
+    public double getPositiveSentimentScore() {
+        return positiveSentimentScore;
+    }
+
+    public void setPositiveSentimentScore(double positiveSentimentScore) {
+        this.positiveSentimentScore = positiveSentimentScore;
+    }
+
+    public double getNegativeSentimentScore() {
+        return negativeSentimentScore;
+    }
+
+    public void setNegativeSentimentScore(double negativeSentimentScore) {
+        this.negativeSentimentScore = negativeSentimentScore;
+    }
+
+    public double getMixedSentimentScore() {
+        return mixedSentimentScore;
+    }
+
+    public void setMixedSentimentScore(double mixedSentimentScore) {
+        this.mixedSentimentScore = mixedSentimentScore;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        JournalEntry that = (JournalEntry) o;
+        return Double.compare(neutralSentimentScore, that.neutralSentimentScore) == 0 && Double.compare(positiveSentimentScore, that.positiveSentimentScore) == 0 && Double.compare(negativeSentimentScore, that.negativeSentimentScore) == 0 && Double.compare(mixedSentimentScore, that.mixedSentimentScore) == 0 && Objects.equals(id, that.id) && Objects.equals(creationDate, that.creationDate) && Objects.equals(subject, that.subject) && Objects.equals(content, that.content) && Objects.equals(user, that.user);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, creationDate, subject, content, neutralSentimentScore, positiveSentimentScore, negativeSentimentScore, mixedSentimentScore, user);
+    }
+
+    @Override
+    public String toString() {
+        return "JournalEntry{" +
+                "id=" + id +
+                ", creationDate=" + creationDate +
+                ", subject='" + subject + '\'' +
+                ", content='" + content + '\'' +
+                ", neutralSentimentScore=" + neutralSentimentScore +
+                ", positiveSentimentScore=" + positiveSentimentScore +
+                ", negativeSentimentScore=" + negativeSentimentScore +
+                ", mixedSentimentScore=" + mixedSentimentScore +
+                ", user=" + user +
+                '}';
+    }
 }
