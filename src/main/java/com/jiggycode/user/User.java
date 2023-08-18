@@ -1,7 +1,10 @@
 package com.jiggycode.user;
 
+import com.jiggycode.journalentry.JournalEntry;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -38,6 +41,9 @@ public class User {
             nullable = false
     )
     private Integer age;
+
+    @OneToMany(mappedBy = "user")
+    private List<JournalEntry> journalEntries = new ArrayList<>();
 
     public User() {}
 
