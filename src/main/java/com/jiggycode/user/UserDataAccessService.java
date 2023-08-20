@@ -1,9 +1,12 @@
 package com.jiggycode.user;
 
+import org.springframework.stereotype.Repository;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class UserDataAccessService implements UserDao {
 
     // in memory db for now
@@ -24,6 +27,7 @@ public class UserDataAccessService implements UserDao {
                 2,
                 "Jiggy",
                 "jiggy@gmail.com",
+                25
         );
         users.add(jiggy);
     }
