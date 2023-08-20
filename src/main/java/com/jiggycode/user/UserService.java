@@ -1,5 +1,6 @@
 package com.jiggycode.user;
 
+import com.jiggycode.exception.ResourceNotFound;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public class UserService {
 
     public User getUser(Integer id) {
         return userDao.selectUserById(id)
-                .orElseThrow(() -> new IllegalArgumentException(
+                .orElseThrow(() -> new ResourceNotFound(
                         "user with id [%s] not found".formatted(id)
                 ));
     }
