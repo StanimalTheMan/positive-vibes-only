@@ -1,4 +1,4 @@
-package com.jiggycode.user;
+package com.jiggycode.author;
 
 import org.springframework.stereotype.Repository;
 

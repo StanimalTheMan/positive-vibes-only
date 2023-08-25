@@ -1,4 +1,4 @@
-package com.jiggycode.user;
+package com.jiggycode.author;
 
 import com.jiggycode.exception.ResourceNotFound;
 import org.springframework.stereotype.Service;

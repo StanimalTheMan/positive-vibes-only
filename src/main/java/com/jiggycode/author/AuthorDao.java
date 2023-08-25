@@ -1,4 +1,4 @@
-package com.jiggycode.user;
+package com.jiggycode.author;
 
 import java.util.List;
 import java.util.Optional;

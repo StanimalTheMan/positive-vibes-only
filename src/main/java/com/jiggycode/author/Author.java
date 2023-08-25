@@ -1,6 +1,6 @@
-package com.jiggycode.user;
+package com.jiggycode.author;
 
-import com.jiggycode.journalentry.JournalEntry;
+//import com.jiggycode.journalentry.JournalEntry;
 import jakarta.persistence.*;
 
 import java.util.ArrayList;
@@ -9,24 +9,24 @@ import java.util.Objects;
 
 @Entity
 @Table(
-        name = "user",
+        name = "author",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "user_email_key",
+                        name = "author_email_key",
                         columnNames = "email"
                 )
         }
 )
-public class User {
+public class author {
     @Id
     @SequenceGenerator(
-            name = "user_id_seq",
-            sequenceName = "user_id_seq",
+            name = "author_id_seq",
+            sequenceName = "author_id_seq",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "user_id_seq"
+            generator = "author_id_seq"
     )
     private Integer id;
     @Column(
@@ -42,19 +42,19 @@ public class User {
     )
     private Integer age;
 
-    @OneToMany(mappedBy = "user")
-    private List<JournalEntry> journalEntries = new ArrayList<>();
+//    @OneToMany(mappedBy = "author")
+//    private List<JournalEntry> journalEntries = new ArrayList<>();
 
-    public User() {}
+    public author() {}
 
-    public User(Integer id, String name, String email, Integer age) {
+    public author(Integer id, String name, String email, Integer age) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.age = age;
     }
 
-    public User(String name, String email, Integer age) {
+    public author(String name, String email, Integer age) {
         this.name = name;
         this.email = email;
         this.age = age;
@@ -96,8 +96,8 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        User user = (User) o;
-        return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(age, user.age);
+        author author = (author) o;
+        return Objects.equals(id, O.id) && Objects.equals(name, author.name) && Objects.equals(email, author.email) && Objects.equals(age, author.age);
     }
 
     @Override
@@ -107,7 +107,7 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" +
+        return "author{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", email='" + email + '\'' +
