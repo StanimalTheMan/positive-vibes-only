@@ -6,20 +6,20 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserService {
+public class AuthorService {
 
-    private final UserDao userDao;
+    private final AuthorDao authorDao;
 
-    public UserService(UserDao userDao) {
-        this.userDao = userDao;
+    public AuthorService(AuthorDao authorDao) {
+        this.authorDao = authorDao;
     }
 
-    public List<User> getAllUsers() {
-        return userDao.selectAllUsers();
+    public List<Author> getAllAuthors() {
+        return authorDao.selectAllAuthors();
     }
 
-    public User getUser(Integer id) {
-        return userDao.selectUserById(id)
+    public Author getAuthor(Integer id) {
+        return authorDao.selectAuthorById(id)
                 .orElseThrow(() -> new ResourceNotFound(
                         "user with id [%s] not found".formatted(id)
                 ));

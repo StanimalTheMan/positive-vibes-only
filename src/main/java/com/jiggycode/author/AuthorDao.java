@@ -3,7 +3,7 @@ package com.jiggycode.author;
 import java.util.List;
 import java.util.Optional;
 
-public interface UserDao {
-    List<User> selectAllUsers();
-    Optional<User> selectUserById(Integer id);
+public interface AuthorDao {
+    List<Author> selectAllAuthors();
+    Optional<Author> selectAuthorById(Integer id);
 }

@@ -3,8 +3,6 @@ package com.jiggycode.author;
 //import com.jiggycode.journalentry.JournalEntry;
 import jakarta.persistence.*;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -17,7 +15,7 @@ import java.util.Objects;
                 )
         }
 )
-public class author {
+public class Author {
     @Id
     @SequenceGenerator(
             name = "author_id_seq",
@@ -45,16 +43,16 @@ public class author {
 //    @OneToMany(mappedBy = "author")
 //    private List<JournalEntry> journalEntries = new ArrayList<>();
 
-    public author() {}
+    public Author() {}
 
-    public author(Integer id, String name, String email, Integer age) {
+    public Author(Integer id, String name, String email, Integer age) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.age = age;
     }
 
-    public author(String name, String email, Integer age) {
+    public Author(String name, String email, Integer age) {
         this.name = name;
         this.email = email;
         this.age = age;
@@ -96,8 +94,8 @@ public class author {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        author author = (author) o;
-        return Objects.equals(id, O.id) && Objects.equals(name, author.name) && Objects.equals(email, author.email) && Objects.equals(age, author.age);
+        Author author = (Author) o;
+        return Objects.equals(id, author.id) && Objects.equals(name, author.name) && Objects.equals(email, author.email) && Objects.equals(age, author.age);
     }
 
     @Override

@@ -7,39 +7,39 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class UserDataAccessService implements UserDao {
+public class AuthorDataAccessService implements AuthorDao {
 
     // in memory db for now
-    private static final List<User> users;
+    private static final List<Author> authors;
 
     static {
-        users = new ArrayList<>();
+        authors = new ArrayList<>();
 
-        User stanimal = new User(
+        Author stanimal = new Author(
                 1,
                 "Stanimal",
                 "stanimal@gmail.com",
                 26
         );
-        users.add(stanimal);
+        authors.add(stanimal);
 
-        User jiggy = new User(
+        Author jiggy = new Author(
                 2,
                 "Jiggy",
                 "jiggy@gmail.com",
                 25
         );
-        users.add(jiggy);
+        authors.add(jiggy);
     }
     @Override
-    public List<User> selectAllUsers() {
-        return users;
+    public List<Author> selectAllAuthors() {
+        return authors;
     }
 
     @Override
-    public Optional<User> selectUserById(Integer id) {
-        return users.stream()
-                .filter(u -> u.getId().equals(id))
+    public Optional<Author> selectAuthorById(Integer id) {
+        return authors.stream()
+                .filter(a -> a.getId().equals(id))
                 .findFirst();
     }
 }

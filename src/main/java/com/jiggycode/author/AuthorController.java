@@ -8,9 +8,9 @@ import java.util.List;
 
 @RestController
 public class AuthorController {
-    private final authorService authorService;
+    private final AuthorService authorService;
 
-    public authorController(authorService authorService) {
+    public AuthorController(AuthorService authorService) {
         this.authorService = authorService;
     }
 
@@ -21,12 +21,12 @@ public class AuthorController {
     )*/
     @GetMapping("api/v1/authors")
     public List<Author> getauthors() {
-        return authorService.getAllauthors();
+        return authorService.getAllAuthors();
     }
 
     @GetMapping("api/v1/authors/{authorId}")
-    public author getauthor(
+    public Author getauthor(
             @PathVariable("authorId") Integer authorId) {
-        return authorService.getauthor(authorId);
+        return authorService.getAuthor(authorId);
     }
 }
