@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public class AuthorDataAccessService implements AuthorDao {
+public class AuthorListDataAccessService implements AuthorDao {
 
     // in memory db for now
     private static final List<Author> authors;
