@@ -20,12 +20,12 @@ public class AuthorController {
             method = RequestMethod.GET
     )*/
     @GetMapping("api/v1/authors")
-    public List<Author> getauthors() {
+    public List<Author> getAuthors() {
         return authorService.getAllAuthors();
     }
 
     @GetMapping("api/v1/authors/{authorId}")
-    public Author getauthor(
+    public Author getAuthor(
             @PathVariable("authorId") Integer authorId) {
         return authorService.getAuthor(authorId);
     }

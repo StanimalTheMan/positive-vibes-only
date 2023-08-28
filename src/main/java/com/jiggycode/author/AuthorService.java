@@ -1,6 +1,7 @@
 package com.jiggycode.author;
 
 import com.jiggycode.exception.ResourceNotFound;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public class AuthorService {
 
     private final AuthorDao authorDao;
 
-    public AuthorService(AuthorDao authorDao) {
+    public AuthorService(@Qualifier("jpa") AuthorDao authorDao) {
         this.authorDao = authorDao;
     }
 

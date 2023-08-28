@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Repository("list")
 public class AuthorListDataAccessService implements AuthorDao {
 
     // in memory db for now
