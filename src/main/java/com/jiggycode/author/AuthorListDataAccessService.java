@@ -42,4 +42,9 @@ public class AuthorListDataAccessService implements AuthorDao {
                 .filter(a -> a.getId().equals(id))
                 .findFirst();
     }
+
+    @Override
+    public void insertAuthor(Author author) {
+        authors.add(author);
+    }
 }

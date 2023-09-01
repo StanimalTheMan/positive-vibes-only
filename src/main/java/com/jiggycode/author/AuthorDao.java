@@ -6,4 +6,5 @@ import java.util.Optional;
 public interface AuthorDao {
     List<Author> selectAllAuthors();
     Optional<Author> selectAuthorById(Integer id);
+    void insertAuthor(Author author);
 }

@@ -23,4 +23,9 @@ public class AuthorJPADataAccessService implements AuthorDao {
     public Optional<Author> selectAuthorById(Integer id) {
         return authorRepository.findById(id);
     }
+
+    @Override
+    public void insertAuthor(Author author) {
+        authorRepository.save(author);
+    }
 }
