@@ -28,4 +28,9 @@ public class AuthorJPADataAccessService implements AuthorDao {
     public void insertAuthor(Author author) {
         authorRepository.save(author);
     }
+
+    @Override
+    public boolean existsAuthorWithEmail(String email) {
+        return authorRepository.existsAuthorByEmail(email);
+    }
 }

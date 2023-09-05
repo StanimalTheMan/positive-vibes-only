@@ -1,6 +1,7 @@
 package com.jiggycode.author;
 
-import com.jiggycode.exception.ResourceNotFound;
+import com.jiggycode.exception.DuplicateResourceException;
+import com.jiggycode.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
@@ -21,8 +22,26 @@ public class AuthorService {
 
     public Author getAuthor(Integer id) {
         return authorDao.selectAuthorById(id)
-                .orElseThrow(() -> new ResourceNotFound(
-                        "user with id [%s] not found".formatted(id)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "author with id [%s] not found".formatted(id)
                 ));
+    }
+
+    public void addAuthor(
+            AuthorRegistrationRequest authorRegistrationRequest) {
+        // check if email exists
+        String email = authorRegistrationRequest.email();
+        if (authorDao.existsAuthorWithEmail(email)) {
+            throw new DuplicateResourceException(
+                "email already taken"
+            );
+        }
+        // add
+        Author author = new Author(
+                authorRegistrationRequest.name(),
+                authorRegistrationRequest.email(),
+                authorRegistrationRequest.age()
+        );
+        authorDao.insertAuthor(author);
     }
 }

@@ -47,4 +47,10 @@ public class AuthorListDataAccessService implements AuthorDao {
     public void insertAuthor(Author author) {
         authors.add(author);
     }
+
+    @Override
+    public boolean existsAuthorWithEmail(String email) {
+        return authors.stream()
+                .anyMatch(a -> a.getEmail().equals(email));
+    }
 }
