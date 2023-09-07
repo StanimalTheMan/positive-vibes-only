@@ -8,4 +8,6 @@ public interface AuthorDao {
     Optional<Author> selectAuthorById(Integer id);
     void insertAuthor(Author author);
     boolean existsAuthorWithEmail(String email);
+    boolean existsAuthorWithId(Integer id);
+    void deleteAuthorById(Integer authorId);
 }

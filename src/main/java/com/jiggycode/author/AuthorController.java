@@ -34,4 +34,10 @@ public class AuthorController {
             @RequestBody AuthorRegistrationRequest request) {
         authorService.addAuthor(request);
     }
+
+    @DeleteMapping("{authorId}")
+    public void deleteAuthor(
+            @PathVariable("authorId") Integer authorId) {
+        authorService.deleteAuthorById(authorId);
+    }
 }

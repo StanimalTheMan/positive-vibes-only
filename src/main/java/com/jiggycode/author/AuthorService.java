@@ -44,4 +44,14 @@ public class AuthorService {
         );
         authorDao.insertAuthor(author);
     }
+
+    public void deleteAuthorById(Integer authorId) {
+        if (!authorDao.existsAuthorWithId(authorId)) {
+            throw new ResourceNotFoundException(
+                    "author with id [%s] not found".formatted(authorId)
+            );
+        }
+
+        authorDao.deleteAuthorById(authorId);
+    }
 }

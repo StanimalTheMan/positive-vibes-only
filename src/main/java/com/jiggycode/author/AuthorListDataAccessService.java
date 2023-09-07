@@ -53,4 +53,18 @@ public class AuthorListDataAccessService implements AuthorDao {
         return authors.stream()
                 .anyMatch(a -> a.getEmail().equals(email));
     }
+
+    @Override
+    public boolean existsAuthorWithId(Integer id) {
+        return authors.stream()
+                .anyMatch(a -> a.getId().equals(id));
+    }
+
+    @Override
+    public void deleteAuthorById(Integer authorId) {
+        authors.stream()
+                .filter(a -> a.getId().equals(authorId))
+                .findFirst()
+                .ifPresent(authors::remove);
+    }
 }

@@ -33,4 +33,14 @@ public class AuthorJPADataAccessService implements AuthorDao {
     public boolean existsAuthorWithEmail(String email) {
         return authorRepository.existsAuthorByEmail(email);
     }
+
+    @Override
+    public boolean existsAuthorWithId(Integer id) {
+        return authorRepository.existsAuthorById(id);
+    }
+
+    @Override
+    public void deleteAuthorById(Integer authorId) {
+        authorRepository.deleteById(authorId);
+    }
 }
