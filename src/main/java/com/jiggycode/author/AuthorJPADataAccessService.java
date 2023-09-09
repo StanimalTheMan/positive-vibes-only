@@ -43,4 +43,10 @@ public class AuthorJPADataAccessService implements AuthorDao {
     public void deleteAuthorById(Integer authorId) {
         authorRepository.deleteById(authorId);
     }
+
+    @Override
+    public void updateAuthor(Author update) {
+        authorRepository.save(update);
+    }
+
 }

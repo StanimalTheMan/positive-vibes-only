@@ -10,4 +10,5 @@ public interface AuthorDao {
     boolean existsAuthorWithEmail(String email);
     boolean existsAuthorWithId(Integer id);
     void deleteAuthorById(Integer authorId);
+    void updateAuthor(Author update);
 }

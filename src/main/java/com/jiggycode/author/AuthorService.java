@@ -1,6 +1,7 @@
 package com.jiggycode.author;
 
 import com.jiggycode.exception.DuplicateResourceException;
+import com.jiggycode.exception.RequestValidationException;
 import com.jiggycode.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -53,5 +54,39 @@ public class AuthorService {
         }
 
         authorDao.deleteAuthorById(authorId);
+    }
+
+    public void updateAuthor(Integer authorId,
+                             AuthorUpdateRequest updateRequest) {
+
+        Author author = getAuthor(authorId);
+
+        boolean isChanged = false;
+
+        if (updateRequest.name() != null && updateRequest.name().equals(author.getName())) {
+            author.setName(updateRequest.name());
+            isChanged = true;
+        }
+
+        if (updateRequest.age() != null && !updateRequest.age().equals(author.getAge())) {
+            author.setAge(updateRequest.age());
+            isChanged = true;
+        }
+
+        if (updateRequest.email() != null && !updateRequest.email().equals(author.getEmail())) {
+            if (authorDao.existsAuthorWithEmail(updateRequest.email())) {
+                throw new DuplicateResourceException(
+                        "email already taken"
+                );
+            }
+            author.setEmail(updateRequest.email());
+            isChanged = true;
+        }
+
+        if (!isChanged) {
+            throw new RequestValidationException("no data changes found");
+        }
+
+        authorDao.updateAuthor(author);
     }
 }

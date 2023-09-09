@@ -67,4 +67,10 @@ public class AuthorListDataAccessService implements AuthorDao {
                 .findFirst()
                 .ifPresent(authors::remove);
     }
+
+    @Override
+    public void updateAuthor(Author author) {
+        authors.add(author);
+    }
+
 }
