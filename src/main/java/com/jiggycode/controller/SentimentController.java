@@ -19,6 +19,9 @@ public class SentimentController {
     public ResponseEntity<String> analyzeSentiment(@RequestBody String text) {
         try {
             DetectSentimentResponse sentimentResponse = sentimentService.detectSentimentResponse(text);
+            System.out.println(sentimentResponse.sentimentScore().positive());
+            System.out.println(sentimentResponse.sentimentScore().negative());
+            System.out.println(sentimentResponse.sentimentScore().neutral());
             String sentiment = sentimentResponse.sentiment().toString();
             return ResponseEntity.ok("Sentiment: " + sentiment);
         } catch (Exception e) {
