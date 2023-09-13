@@ -3,7 +3,6 @@ package com.jiggycode.controller;
 import com.jiggycode.service.SentimentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,9 +18,6 @@ public class SentimentController {
     public ResponseEntity<String> analyzeSentiment(@RequestBody String text) {
         try {
             DetectSentimentResponse sentimentResponse = sentimentService.detectSentimentResponse(text);
-            System.out.println(sentimentResponse.sentimentScore().positive());
-            System.out.println(sentimentResponse.sentimentScore().negative());
-            System.out.println(sentimentResponse.sentimentScore().neutral());
             String sentiment = sentimentResponse.sentiment().toString();
             return ResponseEntity.ok("Sentiment: " + sentiment);
         } catch (Exception e) {
