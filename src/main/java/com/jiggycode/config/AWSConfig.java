@@ -3,18 +3,18 @@ package com.jiggycode.config;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.comprehend.ComprehendClient;
 
 @Configuration
 public class AWSConfig {
 
-    @Value("${aws.access.key.id}")
-    private String awsAccessKeyId;
+    @Value("${aws.accessKey}")
+    private String accessKey;
 
-    @Value("${aws.secret.key.id}")
-    private String awsSecretKeyId;
+    @Value("${aws.secretKey}")
+    private String secretKey;
 
     @Value("${aws.region}")
     private String awsRegion;
@@ -22,7 +22,7 @@ public class AWSConfig {
     @Bean
     public ComprehendClient comprehendClient(){
         return ComprehendClient.builder()
-                .region(Region.of(awsRegion)).credentialsProvider(DefaultCredentialsProvider.create())
+                .region(Region.of(awsRegion)).credentialsProvider(() -> AwsBasicCredentials.create(accessKey, secretKey))
                 .build();
     }
 }
