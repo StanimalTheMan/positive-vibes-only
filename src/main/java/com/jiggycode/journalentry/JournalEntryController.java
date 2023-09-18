@@ -3,8 +3,6 @@ package com.jiggycode.journalentry;
 import com.jiggycode.author.AuthorRepository;
 import com.jiggycode.exception.ResourceNotFoundException;
 import com.jiggycode.service.SentimentService;
-import jakarta.annotation.Resource;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
