@@ -57,8 +57,8 @@ public class JournalEntryController {
             }
             if (sentimentResponse.sentimentScore().positive() > 0.5f) {
                 journalEntryRequest.setAuthor(author);
-                journalEntryRequest.setCreationDate(LocalDate.now());
-                journalEntryRequest.setUpdatedDate(LocalDate.now());
+                journalEntryRequest.setCreationDate(journalEntryRequest.getCreationDate() != null ? journalEntryRequest.getCreationDate() : LocalDate.now());
+                journalEntryRequest.setUpdatedDate(journalEntryRequest.getCreationDate() != null ? journalEntryRequest.getCreationDate() : LocalDate.now());
                 journalEntryRequest.setPositiveSentimentScore(sentimentResponse.sentimentScore().positive());
                 journalEntryRequest.setNegativeSentimentScore(sentimentResponse.sentimentScore().negative());
                 journalEntryRequest.setNeutralSentimentScore(sentimentResponse.sentimentScore().neutral());
@@ -119,6 +119,16 @@ public class JournalEntryController {
 
         journalEntryRepository.deleteById(id);
 
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping("/authors/{authorId}/journal-entries")
+    public ResponseEntity<HttpStatus> deleteAllJournalEntriesOfAuthor(@PathVariable(value = "authorId") Integer authorId) {
+        if (!authorRepository.existsById(authorId)) {
+            throw new ResourceNotFoundException("Did not find author with id = " + authorId);
+        }
+
+        journalEntryRepository.deleteByAuthorId(authorId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
