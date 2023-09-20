@@ -39,6 +39,20 @@ public class JournalEntry {
     private LocalDate creationDate;
 
     @Column(
+            name = "updated_date",
+            nullable = false
+    )
+    private LocalDate updatedDate;
+
+    public LocalDate getUpdatedDate() {
+        return updatedDate;
+    }
+
+    public void setUpdatedDate(LocalDate updatedDate) {
+        this.updatedDate = updatedDate;
+    }
+
+    @Column(
             nullable = false
     )
     private String subject; // main idea / title of journal entry?
@@ -157,12 +171,12 @@ public class JournalEntry {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         JournalEntry that = (JournalEntry) o;
-        return Double.compare(neutralSentimentScore, that.neutralSentimentScore) == 0 && Double.compare(positiveSentimentScore, that.positiveSentimentScore) == 0 && Double.compare(negativeSentimentScore, that.negativeSentimentScore) == 0 && Double.compare(mixedSentimentScore, that.mixedSentimentScore) == 0 && Objects.equals(id, that.id) && Objects.equals(creationDate, that.creationDate) && Objects.equals(subject, that.subject) && Objects.equals(content, that.content) && Objects.equals(author, that.author);
+        return Double.compare(neutralSentimentScore, that.neutralSentimentScore) == 0 && Double.compare(positiveSentimentScore, that.positiveSentimentScore) == 0 && Double.compare(negativeSentimentScore, that.negativeSentimentScore) == 0 && Double.compare(mixedSentimentScore, that.mixedSentimentScore) == 0 && Objects.equals(id, that.id) && Objects.equals(creationDate, that.creationDate) && Objects.equals(updatedDate, that.updatedDate) && Objects.equals(subject, that.subject) && Objects.equals(content, that.content) && Objects.equals(author, that.author);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, creationDate, subject, content, neutralSentimentScore, positiveSentimentScore, negativeSentimentScore, mixedSentimentScore, author);
+        return Objects.hash(id, creationDate, updatedDate, subject, content, neutralSentimentScore, positiveSentimentScore, negativeSentimentScore, mixedSentimentScore, author);
     }
 
     @Override
@@ -170,6 +184,7 @@ public class JournalEntry {
         return "JournalEntry{" +
                 "id=" + id +
                 ", creationDate=" + creationDate +
+                ", updatedDate=" + updatedDate +
                 ", subject='" + subject + '\'' +
                 ", content='" + content + '\'' +
                 ", neutralSentimentScore=" + neutralSentimentScore +
