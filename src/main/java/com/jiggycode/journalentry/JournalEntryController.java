@@ -35,6 +35,14 @@ public class JournalEntryController {
         return new ResponseEntity<>(journalEntries, HttpStatus.OK);
     }
 
+    @GetMapping("/journal-entries/{id}")
+    public ResponseEntity<JournalEntry> getJournalEntryById(@PathVariable(value = "id") Integer id) {
+        JournalEntry journalEntry = journalEntryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Did not find Journal Entry with id = " + id));
+
+        return new ResponseEntity<>(journalEntry, HttpStatus.OK);
+    }
+
     @PostMapping("/authors/{authorId}/journal-entries")
     public ResponseEntity<JournalEntry> createJournalEntry(@PathVariable(value = "authorId") Integer authorId, @RequestBody JournalEntry journalEntryRequest)
     {
