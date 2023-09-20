@@ -110,4 +110,15 @@ public class JournalEntryController {
 
         return new ResponseEntity<>(journalEntryRepository.save(journalEntry), HttpStatus.OK);
     }
+
+    @DeleteMapping("/journal-entries/{id}")
+    public ResponseEntity<HttpStatus> deleteJournalEntry(@PathVariable("id") Integer id) {
+        if (!journalEntryRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Did not find journal entry with id " + id);
+        }
+
+        journalEntryRepository.deleteById(id);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
