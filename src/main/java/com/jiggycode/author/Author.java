@@ -10,7 +10,7 @@ import java.util.Objects;
         name = "author",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "author_email_key",
+                        name = "author_email_unique",
                         columnNames = "email"
                 )
         }

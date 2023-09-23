@@ -32,7 +32,7 @@ public class Main {
 			);
 
 			List<Author> authors = List.of(stanimal, jiggy);
-//			authorRepository.saveAll(authors);
+			authorRepository.saveAll(authors);
 		};
 	}
 
