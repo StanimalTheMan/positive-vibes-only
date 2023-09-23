@@ -1,7 +1,6 @@
 package com.jiggycode.author;
 
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,9 +10,11 @@ import java.util.Optional;
 public class AuthorJDBCDataAccessService implements AuthorDao {
 
     private final JdbcTemplate jdbcTemplate;
+    private final AuthorRowMapper authorRowMapper;
 
-    public AuthorJDBCDataAccessService(JdbcTemplate jdbcTemplate) {
+    public AuthorJDBCDataAccessService(JdbcTemplate jdbcTemplate, AuthorRowMapper authorRowMapper) {
         this.jdbcTemplate = jdbcTemplate;
+        this.authorRowMapper = authorRowMapper;
     }
 
     @Override
@@ -22,19 +23,9 @@ public class AuthorJDBCDataAccessService implements AuthorDao {
                 SELECT id, name, email, age
                 FROM author
                 """;
-        RowMapper<Author> authorRowMapper = (rs, rowNum) -> {
-            Author author = new Author(
-                    rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("email"),
-                    rs.getInt("age")
-            );
-            return author;
-        };
 
-        List<Author> authors = jdbcTemplate.query(sql, authorRowMapper);
+        return jdbcTemplate.query(sql, authorRowMapper);
 
-        return authors;
     }
 
     @Override
