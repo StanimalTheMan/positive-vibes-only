@@ -1,6 +1,7 @@
 package com.jiggycode.author;
 
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,7 +18,23 @@ public class AuthorJDBCDataAccessService implements AuthorDao {
 
     @Override
     public List<Author> selectAllAuthors() {
-        return null;
+        var sql = """
+                SELECT id, name, email, age
+                FROM author
+                """;
+        RowMapper<Author> authorRowMapper = (rs, rowNum) -> {
+            Author author = new Author(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("email"),
+                    rs.getInt("age")
+            );
+            return author;
+        };
+
+        List<Author> authors = jdbcTemplate.query(sql, authorRowMapper);
+
+        return authors;
     }
 
     @Override
