@@ -6,7 +6,7 @@ CREATE TABLE author (
 );
 
 CREATE TABLE journal_entry (
-    id SERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     creation_date DATE NOT NULL,
     updated_date DATE NOT NULL,
     subject VARCHAR(255) NOT NULL,
