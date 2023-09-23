@@ -13,7 +13,7 @@ public class AuthorService {
 
     private final AuthorDao authorDao;
 
-    public AuthorService(@Qualifier("jpa") AuthorDao authorDao) {
+    public AuthorService(@Qualifier("jdbc") AuthorDao authorDao) {
         this.authorDao = authorDao;
     }
 
