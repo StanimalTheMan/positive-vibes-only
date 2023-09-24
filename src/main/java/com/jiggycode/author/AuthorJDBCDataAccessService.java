@@ -30,7 +30,14 @@ public class AuthorJDBCDataAccessService implements AuthorDao {
 
     @Override
     public Optional<Author> selectAuthorById(Integer id) {
-        return Optional.empty();
+        var sql = """
+                SELECT id, name, email, age
+                FROM author
+                WHERE id = ?
+                """;
+        return jdbcTemplate.query(sql, authorRowMapper, id)
+                .stream()
+                .findFirst();
     }
 
     @Override
