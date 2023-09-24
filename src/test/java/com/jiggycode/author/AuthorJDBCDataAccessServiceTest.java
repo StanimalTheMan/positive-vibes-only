@@ -4,6 +4,11 @@ import com.jiggycode.AbstractTestcontainers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+import java.util.UUID;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
 class AuthorJDBCDataAccessServiceTest extends AbstractTestcontainers {
 
     private AuthorJDBCDataAccessService underTest;
@@ -20,10 +25,18 @@ class AuthorJDBCDataAccessServiceTest extends AbstractTestcontainers {
     @Test
     void selectAllAuthors() {
         // Given
+        Author author = new Author(
+            FAKER.name().fullName(),
+            FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID(),
+            20
+        );
+        underTest.insertAuthor(author);
 
         // When
+        List<Author> authors = underTest.selectAllAuthors();
 
         // Then
+        assertThat(authors).isNotEmpty();
     }
 
     @Test
