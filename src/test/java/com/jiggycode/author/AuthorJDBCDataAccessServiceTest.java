@@ -3,7 +3,6 @@ package com.jiggycode.author;
 import com.jiggycode.AbstractTestcontainers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 class AuthorJDBCDataAccessServiceTest extends AbstractTestcontainers {
 
