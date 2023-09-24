@@ -58,21 +58,65 @@ public class AuthorJDBCDataAccessService implements AuthorDao {
 
     @Override
     public boolean existsAuthorWithEmail(String email) {
-        return false;
+        var sql = """
+                SELECT count(id)
+                FROM author
+                WHERE email = ?
+                """;
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, email);
+        return count != null && count > 0;
     }
 
     @Override
     public boolean existsAuthorWithId(Integer id) {
-        return false;
+        var sql = """
+                SELECT count(id)
+                FROM author
+                WHERE id = ?
+                """;
+        Integer count = jdbcTemplate.queryForObject(sql, Integer.class, id);
+        return count != null && count > 0;
     }
 
     @Override
     public void deleteAuthorById(Integer authorId) {
-
+        var sql = """
+                    DELETE
+                    FROM author
+                    WHERE id = ?
+                """;
+        int result = jdbcTemplate.update(sql, authorId);
+        System.out.println("deleteAuthorById result = " + result);
     }
 
     @Override
     public void updateAuthor(Author update) {
-
+        if (update.getName() != null) {
+            String sql = "UPDATE author SET name = ? WHERE id = ?";
+            int result = jdbcTemplate.update(
+                    sql,
+                    update.getName(),
+                    update.getId()
+            );
+            System.out.println("update author name result = " + result);
+        }
+        if (update.getAge() != null) {
+            String sql = "UPDATE author SET age = ?  WHERE id = ?";
+            int result = jdbcTemplate.update(
+                    sql,
+                    update.getAge(),
+                    update.getId()
+            );
+            System.out.println("update author age result = " + result);
+        }
+        if (update.getEmail() != null) {
+            String sql = "UPDATE author SET email = ? WHERE id = ?";
+            int result = jdbcTemplate.update(
+                    sql,
+                    update.getEmail(),
+                    update.getId()
+            );
+            System.out.println("update author email result = " + result);
+        }
     }
 }
