@@ -84,21 +84,35 @@ class AuthorJDBCDataAccessServiceTest extends AbstractTestcontainers {
     }
 
     @Test
-    void insertAuthor() {
+    void existsAuthorWithEmail() {
         // Given
+        String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
+        String name = FAKER.name().fullName();
+        Author author = new Author(
+                name,
+                email,
+                20
+        );
+
+        underTest.insertAuthor(author);
 
         // When
+        boolean actual = underTest.existsAuthorWithEmail(email);
 
         // Then
+        assertThat(actual).isTrue();
     }
 
     @Test
-    void existsAuthorWithEmail() {
+    void existsAuthorWithEmailReturnsFalseWhenDoesNotExist() {
         // Given
+        String email = FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID();
 
         // When
+        boolean actual = underTest.existsAuthorWithEmail(email);
 
         // Then
+        assertThat(actual).isFalse();
     }
 
     @Test
