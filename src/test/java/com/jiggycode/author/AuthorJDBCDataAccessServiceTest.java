@@ -72,6 +72,18 @@ class AuthorJDBCDataAccessServiceTest extends AbstractTestcontainers {
     }
 
     @Test
+    void willReturnEmptyWhenSelectAuthorById() {
+        // Given
+        int id = 0;
+
+        // When
+        var actual = underTest.selectAuthorById(id);
+
+        // Then
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
     void insertAuthor() {
         // Given
 
