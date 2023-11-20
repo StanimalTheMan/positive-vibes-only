@@ -64,7 +64,7 @@ public class JournalEntryController {
                 journalEntryRequest.setNeutralSentimentScore(sentimentResponse.sentimentScore().neutral());
                 journalEntryRequest.setMixedSentimentScore(sentimentResponse.sentimentScore().mixed());
             } else {
-                throw new RuntimeException("Invalid journal entry.  Try to be more positive.");
+                throw new RuntimeException("Invalid journal entry.  Try to be more positive.  Current positive sentiment score is less than 0.5: " + sentimentResponse.sentimentScore().positive());
             }
             return journalEntryRepository.save(journalEntryRequest);
         }).orElseThrow(() -> new ResourceNotFoundException("Did not find Author with id = " + authorId));
