@@ -31,8 +31,8 @@ public class JWTUtil {
             Map<String, Object> claims) {
         String token = Jwts
                 .builder()
-                .setSubject(subject)
                 .setClaims(claims)
+                .setSubject(subject)
                 .setIssuer("https://stanchoi.netlify.app/")
                 .setIssuedAt(Date.from(Instant.now()))
                 .setExpiration(
