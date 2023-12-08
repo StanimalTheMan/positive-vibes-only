@@ -49,4 +49,9 @@ public class AuthorJPADataAccessService implements AuthorDao {
         authorRepository.save(update);
     }
 
+    @Override
+    public Optional<Author> selectAuthorByEmail(String email) {
+        return authorRepository.findAuthorByEmail(email);
+    }
+
 }

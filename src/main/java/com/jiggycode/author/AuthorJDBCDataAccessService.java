@@ -119,4 +119,16 @@ public class AuthorJDBCDataAccessService implements AuthorDao {
             System.out.println("update author email result = " + result);
         }
     }
+
+    @Override
+    public Optional<Author> selectAuthorByEmail(String email) {
+        var sql = """
+                SELECT id, name, email, age
+                FROM author
+                WHERE email = ?
+                """;
+        return jdbcTemplate.query(sql, authorRowMapper, email)
+                .stream()
+                .findFirst();
+    }
 }

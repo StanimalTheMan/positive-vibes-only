@@ -11,4 +11,5 @@ public interface AuthorDao {
     boolean existsAuthorWithId(Integer id);
     void deleteAuthorById(Integer authorId);
     void updateAuthor(Author update);
+    Optional<Author> selectAuthorByEmail(String email);
 }
