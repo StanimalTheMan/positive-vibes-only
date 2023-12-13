@@ -29,7 +29,7 @@ class AuthorJDBCDataAccessServiceTest extends AbstractTestcontainers {
         Author author = new Author(
             FAKER.name().fullName(),
             FAKER.internet().safeEmailAddress() + "-" + UUID.randomUUID(),
-            20
+                "password", 20
         );
         underTest.insertAuthor(author);
 
@@ -47,7 +47,7 @@ class AuthorJDBCDataAccessServiceTest extends AbstractTestcontainers {
         Author author = new Author(
                 FAKER.name().fullName(),
                 email,
-                20
+                "password", 20
         );
 
         underTest.insertAuthor(author);
@@ -91,7 +91,7 @@ class AuthorJDBCDataAccessServiceTest extends AbstractTestcontainers {
         Author author = new Author(
                 name,
                 email,
-                20
+                "password", 20
         );
 
         underTest.insertAuthor(author);
@@ -122,7 +122,7 @@ class AuthorJDBCDataAccessServiceTest extends AbstractTestcontainers {
         Author author = new Author(
                 FAKER.name().fullName(),
                 email,
-                26
+                "password", 26
         );
 
         underTest.insertAuthor(author);

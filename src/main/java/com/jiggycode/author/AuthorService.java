@@ -41,7 +41,7 @@ public class AuthorService {
         Author author = new Author(
                 authorRegistrationRequest.name(),
                 authorRegistrationRequest.email(),
-                authorRegistrationRequest.age()
+                "password", authorRegistrationRequest.age()
         );
         authorDao.insertAuthor(author);
     }

@@ -14,6 +14,7 @@ public class AuthorRowMapper implements RowMapper {
                 rs.getInt("id"),
                 rs.getString("name"),
                 rs.getString("email"),
+                "password",
                 rs.getInt("age")
         );
         return author;

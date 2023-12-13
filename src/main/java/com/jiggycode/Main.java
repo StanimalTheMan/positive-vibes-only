@@ -9,7 +9,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.util.List;
 import java.util.Random;
 
 @SpringBootApplication
@@ -30,7 +29,7 @@ public class Main {
 			Author author = new Author(
 					firstName + " " + lastName,
 					firstName.toLowerCase() + "." + lastName.toLowerCase() + "@jiggycode.com",
-					random.nextInt(16, 99)
+                    "password", random.nextInt(16, 99)
 			);
 			authorRepository.save(author);
 		};

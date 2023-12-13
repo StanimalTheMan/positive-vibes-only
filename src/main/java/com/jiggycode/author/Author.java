@@ -2,7 +2,12 @@ package com.jiggycode.author;
 
 //import com.jiggycode.journalentry.JournalEntry;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -15,7 +20,7 @@ import java.util.Objects;
                 )
         }
 )
-public class Author {
+public class Author implements UserDetails {
     @Id
     @SequenceGenerator(
             name = "author_id_seq",
@@ -40,21 +45,35 @@ public class Author {
     )
     private Integer age;
 
+    @Column(
+            nullable = false
+    )
+    private String password;
+
 //    @OneToMany(mappedBy = "author")
 //    private List<JournalEntry> journalEntries = new ArrayList<>();
 
     public Author() {}
 
-    public Author(Integer id, String name, String email, Integer age) {
+    public Author(Integer id,
+                  String name,
+                  String email,
+                  String password,
+                  Integer age) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.password = password;
         this.age = age;
     }
 
-    public Author(String name, String email, Integer age) {
+    public Author(String name,
+                  String email,
+                  String password,
+                  Integer age) {
         this.name = name;
         this.email = email;
+        this.password = password;
         this.age = age;
     }
 
@@ -111,5 +130,40 @@ public class Author {
                 ", email='" + email + '\'' +
                 ", age=" + age +
                 '}';
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return this.password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
