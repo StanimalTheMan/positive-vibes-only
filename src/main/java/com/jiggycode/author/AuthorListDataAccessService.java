@@ -19,7 +19,8 @@ public class AuthorListDataAccessService implements AuthorDao {
                 1,
                 "Stanimal",
                 "stanimal@gmail.com",
-                "password", 26
+                "password",
+                26
         );
         authors.add(stanimal);
 
@@ -27,7 +28,8 @@ public class AuthorListDataAccessService implements AuthorDao {
                 2,
                 "Jiggy",
                 "jiggy@gmail.com",
-                "password", 25
+                "password",
+                25
         );
         authors.add(jiggy);
     }

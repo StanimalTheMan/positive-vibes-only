@@ -20,7 +20,7 @@ public class AuthorJDBCDataAccessService implements AuthorDao {
     @Override
     public List<Author> selectAllAuthors() {
         var sql = """
-                SELECT id, name, email, age
+                SELECT id, name, email, password, age
                 FROM author
                 """;
 
@@ -31,7 +31,7 @@ public class AuthorJDBCDataAccessService implements AuthorDao {
     @Override
     public Optional<Author> selectAuthorById(Integer id) {
         var sql = """
-                SELECT id, name, email, age
+                SELECT id, name, email, password, age
                 FROM author
                 WHERE id = ?
                 """;
@@ -43,13 +43,14 @@ public class AuthorJDBCDataAccessService implements AuthorDao {
     @Override
     public void insertAuthor(Author author) {
         var sql = """
-                INSERT INTO author(name, email, age)
-                VALUES (?, ?, ?)
+                INSERT INTO author(name, email, password, age)
+                VALUES (?, ?, ?, ?)
                 """;
         int result = jdbcTemplate.update(
                 sql,
                 author.getName(),
                 author.getEmail(),
+                author.getPassword(),
                 author.getAge()
         );
 
