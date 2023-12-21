@@ -124,7 +124,7 @@ public class AuthorJDBCDataAccessService implements AuthorDao {
     @Override
     public Optional<Author> selectAuthorByEmail(String email) {
         var sql = """
-                SELECT id, name, email, age
+                SELECT id, name, email, password, age
                 FROM author
                 WHERE email = ?
                 """;
