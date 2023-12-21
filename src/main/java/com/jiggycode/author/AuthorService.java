@@ -4,6 +4,7 @@ import com.jiggycode.exception.DuplicateResourceException;
 import com.jiggycode.exception.RequestValidationException;
 import com.jiggycode.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,9 +13,12 @@ import java.util.List;
 public class AuthorService {
 
     private final AuthorDao authorDao;
+    private final PasswordEncoder passwordEncoder;
 
-    public AuthorService(@Qualifier("jdbc") AuthorDao authorDao) {
+    public AuthorService(@Qualifier("jdbc") AuthorDao authorDao,
+                         PasswordEncoder passwordEncoder) {
         this.authorDao = authorDao;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<Author> getAllAuthors() {
@@ -41,7 +45,8 @@ public class AuthorService {
         Author author = new Author(
                 authorRegistrationRequest.name(),
                 authorRegistrationRequest.email(),
-                "password", authorRegistrationRequest.age()
+                passwordEncoder.encode(authorRegistrationRequest.password()),
+                authorRegistrationRequest.age()
         );
         authorDao.insertAuthor(author);
     }
