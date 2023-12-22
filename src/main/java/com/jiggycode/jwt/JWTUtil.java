@@ -1,5 +1,6 @@
 package com.jiggycode.jwt;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -43,6 +44,20 @@ public class JWTUtil {
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
         return token;
+    }
+
+    public String getSubject(String token) {
+        return getClaims(token).getSubject();
+    }
+
+    private Claims getClaims(String token) {
+        Claims claims = Jwts
+                .parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims;
     }
 
     private Key getSigningKey() {
