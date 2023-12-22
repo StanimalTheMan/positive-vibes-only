@@ -1,12 +1,15 @@
 package com.jiggycode.journalentry;
 
 import com.jiggycode.author.AuthorRepository;
+import com.jiggycode.exception.AuthorizationException;
 import com.jiggycode.exception.RequestValidationException;
 import com.jiggycode.exception.ResourceNotFoundException;
 import com.jiggycode.service.SentimentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import software.amazon.awssdk.services.comprehend.model.DetectSentimentResponse;
 
@@ -26,10 +29,17 @@ public class JournalEntryController {
     @Autowired
     private SentimentService sentimentService;
 
+    private boolean isAuthorizedAuthor(Integer authorId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentUsername = authentication.getName();
+        return authorRepository.existsAuthorByIdAndEmail(authorId, currentUsername);
+    }
+
     @GetMapping("/authors/{authorId}/journal-entries")
-    public ResponseEntity<List<JournalEntry>> getAllJournalEntriesByAuthorId(@PathVariable(value = "authorId") Integer authorId) {
-        if (!authorRepository.existsAuthorById(authorId)) {
-            throw new ResourceNotFoundException("Did not find Author with id = " + authorId);
+    public ResponseEntity<List<JournalEntry>> getAllJournalEntriesByAuthorId(
+            @PathVariable(value = "authorId") Integer authorId) {
+        if (!isAuthorizedAuthor(authorId)) {
+            throw new AuthorizationException("You are not authorized to view this resource.");
         }
 
         List<JournalEntry> journalEntries = journalEntryRepository.findByAuthorId(authorId);
@@ -41,12 +51,22 @@ public class JournalEntryController {
         JournalEntry journalEntry = journalEntryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Did not find Journal Entry with id = " + id));
 
+        // Check if the authenticated user is the author of the requested entry
+        if (!isAuthorizedAuthor(journalEntry.getAuthor().getId())) {
+            throw new AuthorizationException("You are not authorized to view this resource.");
+        }
+
         return new ResponseEntity<>(journalEntry, HttpStatus.OK);
     }
 
     @PostMapping("/authors/{authorId}/journal-entries")
-    public ResponseEntity<JournalEntry> createJournalEntry(@PathVariable(value = "authorId") Integer authorId, @RequestBody JournalEntry journalEntryRequest)
+    public ResponseEntity<JournalEntry> createJournalEntry(
+            @PathVariable(value = "authorId") Integer authorId,
+            @RequestBody JournalEntry journalEntryRequest)
     {
+        if (!isAuthorizedAuthor(authorId)) {
+            throw new AuthorizationException("You are not authorized to create a journal entry for this author.");
+        }
         JournalEntry journalEntry = authorRepository.findById(authorId).map(author -> {
             DetectSentimentResponse sentimentResponse;
             try {
@@ -75,6 +95,11 @@ public class JournalEntryController {
     public ResponseEntity<JournalEntry> updateJournalEntry(@PathVariable("id") Integer id, @RequestBody JournalEntryUpdateRequest updateRequest) {
         JournalEntry journalEntry = journalEntryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("JournalEntryId " + id + " not found"));
+
+        // Check if the authenticated user is the author of the requested entry
+        if (!isAuthorizedAuthor(journalEntry.getAuthor().getId())) {
+            throw new AuthorizationException("You are not authorized to update this resource.");
+        }
 
         boolean changes = false;
 
@@ -113,8 +138,12 @@ public class JournalEntryController {
 
     @DeleteMapping("/journal-entries/{id}")
     public ResponseEntity<HttpStatus> deleteJournalEntry(@PathVariable("id") Integer id) {
-        if (!journalEntryRepository.existsById(id)) {
-            throw new ResourceNotFoundException("Did not find journal entry with id " + id);
+        JournalEntry journalEntry = journalEntryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Did not find journal entry with id " + id));
+
+        // Check if the authenticated user is the author of the requested entry
+        if (!isAuthorizedAuthor(journalEntry.getAuthor().getId())) {
+            throw new AuthorizationException("You are not authorized to delete this resource.");
         }
 
         journalEntryRepository.deleteById(id);
@@ -126,6 +155,10 @@ public class JournalEntryController {
     public ResponseEntity<HttpStatus> deleteAllJournalEntriesOfAuthor(@PathVariable(value = "authorId") Integer authorId) {
         if (!authorRepository.existsById(authorId)) {
             throw new ResourceNotFoundException("Did not find author with id = " + authorId);
+        }
+
+        if (!isAuthorizedAuthor(authorId)) {
+            throw new AuthorizationException("You are not authorized to delete journal entries for this author.");
         }
 
         journalEntryRepository.deleteByAuthorId(authorId);
