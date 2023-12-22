@@ -8,8 +8,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Random;
+import java.util.UUID;
 
 @SpringBootApplication
 public class Main {
@@ -19,7 +21,9 @@ public class Main {
 	}
 
 	@Bean
-	CommandLineRunner runner(AuthorRepository authorRepository) {
+	CommandLineRunner runner(
+			AuthorRepository authorRepository,
+			PasswordEncoder passwordEncoder) {
 		return args -> {
 			var faker = new Faker();
 			Random random = new Random();
@@ -29,7 +33,7 @@ public class Main {
 			Author author = new Author(
 					firstName + " " + lastName,
 					firstName.toLowerCase() + "." + lastName.toLowerCase() + "@jiggycode.com",
-                    "password", random.nextInt(16, 99)
+                    passwordEncoder.encode(UUID.randomUUID().toString()), random.nextInt(16, 99)
 			);
 			authorRepository.save(author);
 		};
