@@ -1,7 +1,9 @@
 package com.jiggycode.journalentry;
 
+import com.jiggycode.author.Author;
 import com.jiggycode.author.AuthorRepository;
 import com.jiggycode.exception.AuthorizationException;
+import com.jiggycode.exception.DuplicateResourceException;
 import com.jiggycode.exception.RequestValidationException;
 import com.jiggycode.exception.ResourceNotFoundException;
 import com.jiggycode.service.SentimentService;
@@ -15,6 +17,7 @@ import software.amazon.awssdk.services.comprehend.model.DetectSentimentResponse;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -67,28 +70,45 @@ public class JournalEntryController {
         if (!isAuthorizedAuthor(authorId)) {
             throw new AuthorizationException("You are not authorized to create a journal entry for this author.");
         }
-        JournalEntry journalEntry = authorRepository.findById(authorId).map(author -> {
-            DetectSentimentResponse sentimentResponse;
-            try {
-                sentimentResponse = sentimentService.detectSentimentResponse(journalEntryRequest.getContent());
-            } catch (Exception e) {
-                // Handle exceptions and error responses here
-                throw new RuntimeException("server error");
+
+        // Ensure that the provided authorId matches the author in the request
+        if (journalEntryRequest.getAuthor() != null && !Objects.equals(journalEntryRequest.getAuthor().getId(), authorId)) {
+            throw new RequestValidationException("Author ID in the path does not match the Author ID in the request body.");
+        }
+
+        // Set the author using the provided authorId
+        Author author = authorRepository.findById(authorId)
+                .orElseThrow(() -> new ResourceNotFoundException("Author not found with id = " + authorId));
+
+        // Set other fields in the journalEntryRequest
+        DetectSentimentResponse sentimentResponse;
+        try {
+            sentimentResponse = sentimentService.detectSentimentResponse(journalEntryRequest.getContent());
+        } catch (Exception e) {
+            throw new RuntimeException("Server error");
+        }
+
+        if (sentimentResponse.sentimentScore().positive() > 0.5f) {
+            journalEntryRequest.setAuthor(author);
+            journalEntryRequest.setCreationDate(journalEntryRequest.getCreationDate() != null ? journalEntryRequest.getCreationDate() : LocalDate.now());
+            journalEntryRequest.setUpdatedDate(journalEntryRequest.getCreationDate() != null ? journalEntryRequest.getCreationDate() : LocalDate.now());
+            journalEntryRequest.setPositiveSentimentScore(sentimentResponse.sentimentScore().positive());
+            journalEntryRequest.setNegativeSentimentScore(sentimentResponse.sentimentScore().negative());
+            journalEntryRequest.setNeutralSentimentScore(sentimentResponse.sentimentScore().neutral());
+            journalEntryRequest.setMixedSentimentScore(sentimentResponse.sentimentScore().mixed());
+
+            // Check for existing journal entry with the same creation date and author
+            if (journalEntryRepository.existsByCreationDateAndAuthor(journalEntryRequest.getCreationDate(), author)) {
+                throw new DuplicateResourceException("Journal entry with the same creation date already exists for this author.");
             }
-            if (sentimentResponse.sentimentScore().positive() > 0.5f) {
-                journalEntryRequest.setAuthor(author);
-                journalEntryRequest.setCreationDate(journalEntryRequest.getCreationDate() != null ? journalEntryRequest.getCreationDate() : LocalDate.now());
-                journalEntryRequest.setUpdatedDate(journalEntryRequest.getCreationDate() != null ? journalEntryRequest.getCreationDate() : LocalDate.now());
-                journalEntryRequest.setPositiveSentimentScore(sentimentResponse.sentimentScore().positive());
-                journalEntryRequest.setNegativeSentimentScore(sentimentResponse.sentimentScore().negative());
-                journalEntryRequest.setNeutralSentimentScore(sentimentResponse.sentimentScore().neutral());
-                journalEntryRequest.setMixedSentimentScore(sentimentResponse.sentimentScore().mixed());
-            } else {
-                throw new RuntimeException("Invalid journal entry.  Try to be more positive.  Current positive sentiment score is less than 0.5: " + sentimentResponse.sentimentScore().positive());
-            }
-            return journalEntryRepository.save(journalEntryRequest);
-        }).orElseThrow(() -> new ResourceNotFoundException("Did not find Author with id = " + authorId));
-        return new ResponseEntity<>(journalEntry, HttpStatus.CREATED);
+        } else {
+            throw new RuntimeException("Invalid journal entry. Try to be more positive. Current positive sentiment score is less than 0.5: " + sentimentResponse.sentimentScore().positive());
+        }
+
+        // Save the journal entry
+        JournalEntry savedJournalEntry = journalEntryRepository.save(journalEntryRequest);
+
+        return new ResponseEntity<>(savedJournalEntry, HttpStatus.CREATED);
     }
 
     @PutMapping("/journal-entries/{id}")
@@ -113,6 +133,7 @@ public class JournalEntryController {
             }
             if (sentimentResponse.sentimentScore().positive() > 0.5f) {
                 journalEntry.setContent(updateRequest.content());
+                journalEntry.setSubject(updateRequest.subject());
                 journalEntry.setUpdatedDate(LocalDate.now());
                 journalEntry.setPositiveSentimentScore(sentimentResponse.sentimentScore().positive());
                 journalEntry.setNegativeSentimentScore(sentimentResponse.sentimentScore().negative());

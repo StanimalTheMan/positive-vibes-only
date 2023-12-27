@@ -14,7 +14,7 @@ import java.util.Objects;
         uniqueConstraints = {
                 @UniqueConstraint( // in order to store only one date e.g. 2023-08-17 per journal entry
                      name = "journal_entry_creation_date_unique",
-                        columnNames = "creation_date"
+                        columnNames = {"author_id", "creation_date"}
                 )
         }
 )

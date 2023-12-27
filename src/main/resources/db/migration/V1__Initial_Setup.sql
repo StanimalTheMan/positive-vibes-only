@@ -24,4 +24,4 @@ ALTER TABLE author
 
 -- Add a unique constraint on creation_date
 ALTER TABLE journal_entry
-    ADD CONSTRAINT journal_entry_creation_date_unique UNIQUE (creation_date);
+    ADD CONSTRAINT journal_entry_creation_date_author_unique UNIQUE (creation_date, author_id);
