@@ -4,29 +4,48 @@ import com.jiggycode.exception.DuplicateResourceException;
 import com.jiggycode.exception.RequestValidationException;
 import com.jiggycode.exception.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class AuthorService {
 
     private final AuthorDao authorDao;
+    private final AuthorDTOMapper authorDTOMapper;
+
     private final PasswordEncoder passwordEncoder;
 
     public AuthorService(@Qualifier("jdbc") AuthorDao authorDao,
-                         PasswordEncoder passwordEncoder) {
+                         AuthorDTOMapper authorDTOMapper, PasswordEncoder passwordEncoder) {
         this.authorDao = authorDao;
+        this.authorDTOMapper = authorDTOMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<Author> getAllAuthors() {
-        return authorDao.selectAllAuthors();
+    public List<AuthorDTO> getAllAuthors() {
+        return authorDao.selectAllAuthors()
+                .stream()
+                .map(author -> new AuthorDTO(
+                        author.getId(),
+                        author.getName(),
+                        author.getEmail(),
+                        author.getAge(),
+                        author.getAuthorities()
+                                .stream()
+                                .map(GrantedAuthority::getAuthority)
+                                .collect(Collectors.toList()),
+                        author.getUsername()
+                ))
+                .collect(Collectors.toList());
     }
 
-    public Author getAuthor(Integer id) {
+    public AuthorDTO getAuthor(Integer id) {
         return authorDao.selectAuthorById(id)
+                .map(authorDTOMapper)
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "author with id [%s] not found".formatted(id)
                 ));
@@ -64,7 +83,11 @@ public class AuthorService {
     public void updateAuthor(Integer authorId,
                              AuthorUpdateRequest updateRequest) {
 
-        Author author = getAuthor(authorId);
+        Author author = authorDao.selectAuthorById(authorId)
+                .orElseThrow(() -> new ResourceNotFoundException(
+                        "author with id [%s] not found".formatted(authorId)
+                ));
+
 
         boolean isChanged = false;
 
