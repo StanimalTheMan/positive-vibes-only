@@ -1,9 +1,7 @@
 package com.jiggycode.journalentry;
 
-import com.jiggycode.author.AuthorRepository;
 import com.jiggycode.exception.DuplicateResourceException;
 import com.jiggycode.exception.ResourceNotFoundException;
-import com.jiggycode.service.SentimentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +15,6 @@ public class JournalEntryController {
 
     @Autowired
     private JournalEntryService journalEntryService;
-
-    @Autowired
-    private AuthorRepository authorRepository;
-
-    @Autowired
-    private JournalEntryRepository journalEntryRepository;
-
-    @Autowired
-    private SentimentService sentimentService;
 
     @GetMapping("/authors/{authorId}/journal-entries")
     public ResponseEntity<List<JournalEntry>> getAllJournalEntriesByAuthorId(
