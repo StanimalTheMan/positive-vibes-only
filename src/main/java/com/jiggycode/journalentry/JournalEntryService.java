@@ -8,7 +8,6 @@ import com.jiggycode.exception.ResourceNotFoundException;
 import com.jiggycode.service.SentimentService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.comprehend.model.DetectSentimentResponse;
 
@@ -19,14 +18,15 @@ import java.util.Objects;
 @Service
 public class JournalEntryService {
 
-    @Autowired
-    private AuthorRepository authorRepository;
+    private final AuthorRepository authorRepository;
+    private final JournalEntryRepository journalEntryRepository;
+    private final SentimentService sentimentService;
 
-    @Autowired
-    private JournalEntryRepository journalEntryRepository;
-
-    @Autowired
-    private SentimentService sentimentService;
+    public JournalEntryService(AuthorRepository authorRepository, JournalEntryRepository journalEntryRepository, SentimentService sentimentService) {
+        this.authorRepository = authorRepository;
+        this.journalEntryRepository = journalEntryRepository;
+        this.sentimentService = sentimentService;
+    }
 
     public List<JournalEntry> getAllJournalEntriesByAuthorId(Integer authorId) {
         if (isAuthorizedAuthor(authorId)) {
