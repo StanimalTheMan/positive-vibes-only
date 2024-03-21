@@ -29,7 +29,7 @@ public class JournalEntryService {
     }
 
     public List<JournalEntry> getAllJournalEntriesByAuthorId(Integer authorId) {
-        if (isAuthorizedAuthor(authorId)) {
+        if (!isAuthorizedAuthor(authorId)) {
             throw new AuthorizationException("You are not authorized to view journal entries for this author.");
         }
 
@@ -40,7 +40,7 @@ public class JournalEntryService {
         JournalEntry journalEntry = journalEntryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Did not find Journal Entry with id = " + id));
 
-        if (isAuthorizedAuthor(journalEntry.getAuthor().getId())) {
+        if (!isAuthorizedAuthor(journalEntry.getAuthor().getId())) {
             throw new AuthorizationException("You are not authorized to view this resource.");
         }
 
@@ -48,7 +48,7 @@ public class JournalEntryService {
     }
 
     public JournalEntry createJournalEntry(Integer authorId, JournalEntry journalEntryRequest) {
-        if (isAuthorizedAuthor(authorId)) {
+        if (!isAuthorizedAuthor(authorId)) {
             throw new AuthorizationException("You are not authorized to create a journal entry for this author.");
         }
 
@@ -97,7 +97,7 @@ public class JournalEntryService {
         JournalEntry journalEntry = journalEntryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("JournalEntryId " + id + " not found"));
 
-        if (isAuthorizedAuthor(journalEntry.getAuthor().getId())) {
+        if (!isAuthorizedAuthor(journalEntry.getAuthor().getId())) {
             throw new AuthorizationException("You are not authorized to update this resource.");
         }
 
@@ -145,7 +145,7 @@ public class JournalEntryService {
         JournalEntry journalEntry = journalEntryRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Did not find journal entry with id " + id));
 
-        if (isAuthorizedAuthor(journalEntry.getAuthor().getId())) {
+        if (!isAuthorizedAuthor(journalEntry.getAuthor().getId())) {
             throw new AuthorizationException("You are not authorized to delete this resource.");
         }
 
@@ -157,16 +157,16 @@ public class JournalEntryService {
             throw new ResourceNotFoundException("Did not find author with id = " + authorId);
         }
 
-        if (isAuthorizedAuthor(authorId)) {
+        if (!isAuthorizedAuthor(authorId)) {
             throw new AuthorizationException("You are not authorized to delete journal entries for this author.");
         }
 
         journalEntryRepository.deleteByAuthorId(authorId);
     }
 
-    private boolean isAuthorizedAuthor(Integer authorId) {
+    boolean isAuthorizedAuthor(Integer authorId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentUsername = authentication.getName();
-        return !authorRepository.existsAuthorByIdAndEmail(authorId, currentUsername);
+        return authorRepository.existsAuthorByIdAndEmail(authorId, currentUsername);
     }
 }
